@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/testFixture';
 
-test.describe('Visual Regression', () => {
+test.describe('Visual Tests', () => {
 
   test('@visual calculator homepage',
     async ({ page }) => {

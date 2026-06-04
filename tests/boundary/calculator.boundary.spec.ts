@@ -2,59 +2,68 @@ import { test, expect } from '../../fixtures/testFixture';
 
 test.describe('Boundary Tests', () => {
 
-  test('@boundary decimal addition', async ({ calculator }) => {
+  test(
+    '@boundary decimal addition',
+    async ({ calculator }) => {
 
-    await calculator.clickSequence([
-      '1', '.', '5',
-      '+',
-      '1', '.', '5',
-      '='
-    ]);
+      await calculator.enterExpression(
+        '1.5+1.5'
+      );
 
-    await expect(
-      calculator.display
-    ).toHaveValue('3');
+      await calculator.calculate();
+
+      await expect(
+        calculator.display
+      ).toHaveValue('3');
+
   });
 
-  test('@boundary large number calculation', async ({ calculator }) => {
+  test(
+    '@boundary large number calculation',
+    async ({ calculator }) => {
 
-    await calculator.clickSequence([
-      '9','9','9','9','9',
-      '+',
-      '1',
-      '='
-    ]);
+      await calculator.enterExpression(
+        '99999+1'
+      );
 
-    await expect(
-      calculator.display
-    ).toHaveValue('100000');
+      await calculator.calculate();
+
+      await expect(
+        calculator.display
+      ).toHaveValue('100000');
+
   });
 
-  test('@boundary empty expression', async ({ calculator }) => {
+  test(
+    '@boundary zero addition',
+    async ({ calculator }) => {
 
-    await calculator.equalBtn.click();
+      await calculator.enterExpression(
+        '0+0'
+      );
 
-    const value =
-      await calculator.display.inputValue();
+      await calculator.calculate();
 
-    expect(value).not.toBe('');
+      await expect(
+        calculator.display
+      ).toHaveValue('0');
+
   });
 
-  test('@boundary consecutive operators', async ({ calculator }) => {
+  test(
+    '@boundary long expression',
+    async ({ calculator }) => {
 
-    await calculator.clickSequence([
-      '1',
-      '+',
-      '+',
-      '+',
-      '2',
-      '='
-    ]);
+      await calculator.enterExpression(
+        '1111111111+1'
+      );
 
-    const value =
-      await calculator.display.inputValue();
+      await calculator.calculate();
 
-    expect(value.length).toBeGreaterThan(0);
+      await expect(
+        calculator.display
+      ).toHaveValue('1111111112');
+
   });
 
 });

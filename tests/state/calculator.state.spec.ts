@@ -1,44 +1,49 @@
 import { test, expect } from '../../fixtures/testFixture';
+import { BUTTONS } from '../../test-data/buttons';
 
-test.describe('State Management', () => {
+test.describe('State Tests', () => {
 
-  test('@state clear after error', async ({ calculator }) => {
-
-    await calculator.operator('(').click();
-
-    await calculator.equalBtn.click();
-
-    await calculator.clearBtn.click();
-
-    await expect(
-      calculator.display
-    ).toHaveValue('');
-  });
-
-  test('@state multiple sequential calculations',
+  test(
+    '@state clear after error',
     async ({ calculator }) => {
 
-      await calculator.clickSequence([
+      await calculator.clickButton(
+        BUTTONS.OPEN_PAREN
+      );
+
+      await calculator.calculate();
+
+      await calculator.clear();
+
+      await expect(
+        calculator.display
+      ).toHaveValue('');
+
+  });
+
+  test(
+    '@state multiple calculations',
+    async ({ calculator }) => {
+
+      await calculator.performCalculation(
         '1',
-        '+',
-        '1',
-        '='
-      ]);
+        BUTTONS.ADD,
+        '1'
+      );
 
       await expect(
         calculator.display
       ).toHaveValue('2');
 
-      await calculator.clickSequence([
-        '+',
-        '2',
-        '='
-      ]);
+      await calculator.enterExpression(
+        '+2'
+      );
 
-      const result =
-        await calculator.display.inputValue();
+      await calculator.calculate();
 
-      expect(result.length).toBeGreaterThan(0);
+      await expect(
+        calculator.display
+      ).toHaveValue('4');
 
   });
 
