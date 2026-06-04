@@ -1,10 +1,13 @@
 
 Project Structure
 
+
+
 rbi-caluclator/
 │
 ├── app/
 │   └── Scientific Calculator.html
+
 │
 ├── tests/
 ├── pages/
@@ -17,6 +20,10 @@ rbi-caluclator/
 ├── package.json
 ├── tsconfig.json
 └── README.md
+
+
+
+
 
 | Feature          | Category          | Risk     |
 | ---------------- | ----------------- | -------- |
