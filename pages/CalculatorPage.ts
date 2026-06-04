@@ -2,18 +2,15 @@ import { Page, Locator } from '@playwright/test';
 import path from 'path';
 
 export class CalculatorPage {
-
   readonly page: Page;
-
   readonly display: Locator;
 
   constructor(page: Page) {
     this.page = page;
-
     this.display = page.locator('#display');
   }
 
-  async open() {
+  async open(): Promise<void> {
     const filePath = path.resolve(
       'app/Scientific Calculator.html'
     );
@@ -21,51 +18,68 @@ export class CalculatorPage {
     await this.page.goto(`file://${filePath}`);
   }
 
-  digit(value: string) {
-    return this.page.getByRole('button', { name: value });
+  button(name: string): Locator {
+    return this.page.getByRole('button', {
+      name,
+      exact: true
+    });
   }
 
-  operator(value: string) {
-    return this.page.getByRole('button', { name: value });
+  async clickButton(name: string): Promise<void> {
+    await this.button(name).click();
   }
 
-  get clearBtn() {
-    return this.page.getByRole('button', { name: 'C' });
-  }
-
-  get equalBtn() {
-    return this.page.getByRole('button', { name: '=' });
-  }
-
-  get sinBtn() {
-    return this.page.getByRole('button', { name: 'sin' });
-  }
-
-  get cosBtn() {
-    return this.page.getByRole('button', { name: 'cos' });
-  }
-
-  get tanBtn() {
-    return this.page.getByRole('button', { name: 'tan' });
-  }
-
-  get sqrtBtn() {
-    return this.page.getByRole('button', { name: '√' });
-  }
-
-  get logBtn() {
-    return this.page.getByRole('button', { name: 'log' });
-  }
-
-  async clickSequence(sequence: string[]) {
-    for (const item of sequence) {
-      await this.page
-        .getByRole('button', { name: item })
-        .click();
+  async clickSequence(
+    buttons: string[]
+  ): Promise<void> {
+    for (const button of buttons) {
+      await this.clickButton(button);
     }
   }
 
-  async value() {
-    return this.display.inputValue();
+async enterExpression(
+  expression: string
+): Promise<void> {
+
+  for (const char of expression) {
+
+    switch (char) {
+
+      case '*':
+        await this.clickButton('×');
+        break;
+
+      case '/':
+        await this.clickButton('÷');
+        break;
+
+      default:
+        await this.clickButton(char);
+    }
+  }
+}
+  async performCalculation(
+    first: string,
+    operator: string,
+    second: string
+  ): Promise<void> {
+
+    await this.enterExpression(
+      `${first}${operator}${second}`
+    );
+
+    await this.calculate();
+  }
+
+  async calculate(): Promise<void> {
+    await this.clickButton('=');
+  }
+
+  async clear(): Promise<void> {
+    await this.clickButton('C');
+  }
+
+  async getDisplayValue(): Promise<string> {
+    return await this.display.inputValue();
   }
 }
