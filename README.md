@@ -73,7 +73,8 @@ rbi-hub-code-challenge/
 │
 ├── docs/
 │   ├── TEST_STRATEGY.md
-│   └── COVERAGE_MATRIX.md
+│   └── DEFECT_ANALYSIS.md
+│   └── COVERAGE_MATRIX.md|   
 │
 ├── bug-reports/
 │
